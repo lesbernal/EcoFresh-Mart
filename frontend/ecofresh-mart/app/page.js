@@ -21,10 +21,10 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState([]);
 
   const mockProducts = [
-    { id: 1, name: "Apple", classification: "fruits", organic: true, price: 1.5, inventory: 100, supplier: "supplier1" },
-    { id: 2, name: "Banana", classification: "fruits", organic: false, price: 0.75, inventory: 120, supplier: "supplier2" },
-    { id: 3, name: "Carrot", classification: "vegetables", organic: true, price: .80, inventory: 200, supplier: "supplier1" },
-    { id: 4, name: "Tomato", classification: "vegetables", organic: false, price: 1.25, inventory: 150, supplier: "supplier3" },
+    { id: 1, name: "Apple", classification: "fruits", organic: true, pesticideFree: true, local: true, price: 1.5, inventory: 100, supplier: "supplier1" },
+    { id: 2, name: "Banana", classification: "fruits", organic: false, pesticideFree: false, local: false, price: 0.75, inventory: 120, supplier: "supplier2" },
+    { id: 3, name: "Carrot", classification: "vegetables", organic: true, pesticideFree: true, local: true, price: .80, inventory: 200, supplier: "supplier1" },
+    { id: 4, name: "Tomato", classification: "vegetables", organic: false, pesticideFree: false, local: false, price: 1.25, inventory: 150, supplier: "supplier3" },
   ]
 
   const handleSearch = () => {
