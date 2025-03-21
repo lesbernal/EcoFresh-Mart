@@ -1,56 +1,194 @@
+"use client";
+
 import Image from "next/image";
+import {Zen_Kurenaido} from "next/font/google";
+import { useState } from "react";
+
+const zenKurenaido = Zen_Kurenaido({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [classification, setClassification] = useState("");
+  const [organic, setOrganic] = useState(false);
+  const [local, setLocal] = useState(false);
+  const [pesticideFree, setPesticideFree] = useState(false);
+  const [inventoryAmount, setInventoryAmount] = useState("");
+  const [supplier, setSupplier] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const [searchResults, setSearchResults] = useState([]);
+
+  const mockProducts = [
+    { id: 1, name: "Apple", classification: "fruits", organic: true, price: 1.5, inventory: 100, supplier: "supplier1" },
+    { id: 2, name: "Banana", classification: "fruits", organic: false, price: 0.75, inventory: 120, supplier: "supplier2" },
+    { id: 3, name: "Carrot", classification: "vegetables", organic: true, price: .80, inventory: 200, supplier: "supplier1" },
+    { id: 4, name: "Tomato", classification: "vegetables", organic: false, price: 1.25, inventory: 150, supplier: "supplier3" },
+  ]
+
+  const handleSearch = () => {
+
+    const filteredResults = mockProducts.filter(product => {
+      return (
+        (classification ? product.classification === classification : true) &&
+        (organic ? product.organic === true : true) &&
+        (local ? product.local === true : true) &&
+        (pesticideFree ? product.pesticideFree === true : true) &&
+        (inventoryAmount ? product.inventory >= inventoryAmount : true) &&
+        (supplier ? product.supplier === supplier : true) &&
+        (searchQuery ? product.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+      );
+    });
+
+    // Set the filtered search results to state
+    setSearchResults(filteredResults);
+  };
+
+  return (
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 bg-gray-200 font-[family-name:var(--font-geist-sans)]">
+      
+      <header className="bg-gray-200 text-green-800 py-4 w-full text-center rounded-lg shadow-md">
+        <h1 className={`${zenKurenaido.className} text-4xl tracking-wide`}>
+          EcoEnhance
+        </h1>
+      </header>
+
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
+        
+        {/* Search Box */}
+        <div className="w-full flex gap-4">
+          <input 
+            type="text"
+            placeholder="Search for products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          />
+        </div> 
+
+        {/* Search Filters */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          
+          {/* Classification Dropdown */}
+          <div className="flex flex-col">
+            <label htmlFor="classification" className="text-sm font-medium text-gray-700">
+              Classification
+            </label>
+            <select
+              id="classification"
+              value={classification}
+              onChange={(e) => setClassification(e.target.value)}
+              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Select Classification</option>
+              <option value="fruits">Fruits</option>
+              <option value="vegetables">Vegetables</option>
+              <option value="dairy">Dairy</option>
+            </select>
+          </div>
+          
+          {/* Supplier Dropdown */}
+          <div className="flex flex-col">
+            <label htmlFor="supplier" className="text-sm font-medium text-gray-700">
+              Supplier
+            </label>
+            <select
+              id="supplier"
+              value={supplier}
+              onChange={(e) => setSupplier(e.target.value)}
+              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="">Select Supplier</option>
+              <option value="supplier1">Supplier 1</option>
+              <option value="supplier2">Supplier 2</option>
+              <option value="supplier3">Supplier 3</option>
+            </select>
+          </div>
+
+          {/* Organic Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="organic"
+              checked={organic}
+              onChange={() => setOrganic(!organic)}
+              className="h-4 w-4 text-green-500"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <label htmlFor="organic" className="text-sm text-gray-700">Organic Only</label>
+          </div>
+
+          {/* Local Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="local"
+              checked={local}
+              onChange={() => setLocal(!local)}
+              className="h-4 w-4 text-green-500"
+            />
+            <label htmlFor="local" className="text-sm text-gray-700">Local Only</label>
+          </div>
+
+          {/* Pesticide Free Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="pesticideFree"
+              checked={pesticideFree}
+              onChange={() => setPesticideFree(!pesticideFree)}
+              className="h-4 w-4 text-green-500"
+            />
+            <label htmlFor="pesticideFree" className="text-sm text-gray-700">Pesticide Free</label>
+          </div>
+
+          {/* Inventory Amount Search */}
+          <div className="flex flex-col">
+            <label htmlFor="inventoryAmount" className="text-sm font-medium text-gray-700">
+              Minimum Inventory Amount
+            </label>
+            <input
+              type="number"
+              id="inventoryAmount"
+              value={inventoryAmount}
+              onChange={(e) => setInventoryAmount(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          {/* Sort by Lowest Price */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleSearch()}
+              className="bg-green-800 text-white p-3 rounded-lg shadow-sm hover:bg-green-600"
+            >
+              Search
+            </button>
+          </div>
+
+          {/* Search Results */}
+        <div className="mt-6 w-full">
+          {searchResults.length > 0 ? (
+            <div className="space-y-4">
+              {searchResults.map((product) => (
+                <div key={product.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold">{product.name}</h3>
+                  <p className="text-sm text-gray-500">Classification: {product.classification}</p>
+                  <p className="text-sm text-gray-500">Price: ${product.price}</p>
+                  <p className="text-sm text-gray-500">Inventory: {product.inventory}</p>
+                  <p className="text-sm text-gray-500">Supplier: {product.supplier}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No results found.</p>
+          )}
         </div>
+        </div>
+
+        <p className="text-lg text-gray-600 mt-4">Welcome to EcoEnhance by EcoFresh Mart! 🌿</p>
       </main>
+
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
