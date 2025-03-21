@@ -17,6 +17,7 @@ export default function Home() {
   const [inventoryAmount, setInventoryAmount] = useState("");
   const [supplier, setSupplier] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   const [searchResults, setSearchResults] = useState([]);
 
@@ -63,7 +64,7 @@ export default function Home() {
             placeholder="Search for products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-800 focus:border-green-700"
           />
         </div> 
 
@@ -79,7 +80,7 @@ export default function Home() {
               id="classification"
               value={classification}
               onChange={(e) => setClassification(e.target.value)}
-              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-800"
             >
               <option value="">Select Classification</option>
               <option value="fruits">Fruits</option>
@@ -97,49 +98,13 @@ export default function Home() {
               id="supplier"
               value={supplier}
               onChange={(e) => setSupplier(e.target.value)}
-              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="text-gray-500 p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-800"
             >
               <option value="">Select Supplier</option>
               <option value="supplier1">Supplier 1</option>
               <option value="supplier2">Supplier 2</option>
               <option value="supplier3">Supplier 3</option>
             </select>
-          </div>
-
-          {/* Organic Checkbox */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="organic"
-              checked={organic}
-              onChange={() => setOrganic(!organic)}
-              className="h-4 w-4 text-green-500"
-            />
-            <label htmlFor="organic" className="text-sm text-gray-700">Organic Only</label>
-          </div>
-
-          {/* Local Checkbox */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="local"
-              checked={local}
-              onChange={() => setLocal(!local)}
-              className="h-4 w-4 text-green-500"
-            />
-            <label htmlFor="local" className="text-sm text-gray-700">Local Only</label>
-          </div>
-
-          {/* Pesticide Free Checkbox */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="pesticideFree"
-              checked={pesticideFree}
-              onChange={() => setPesticideFree(!pesticideFree)}
-              className="h-4 w-4 text-green-500"
-            />
-            <label htmlFor="pesticideFree" className="text-sm text-gray-700">Pesticide Free</label>
           </div>
 
           {/* Inventory Amount Search */}
@@ -152,11 +117,61 @@ export default function Home() {
               id="inventoryAmount"
               value={inventoryAmount}
               onChange={(e) => setInventoryAmount(e.target.value)}
+              className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-800"
+            />
+          </div>
+
+          {/* Price Search */}
+          <div className="flex flex-col">
+            <label htmlFor="maxPrice" className="text-sm font-medium text-gray-700">
+              Maximum Price
+            </label>
+            <input
+              type="number"
+              id="maxPrice"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
               className="p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
-          {/* Sort by Lowest Price */}
+          {/* Organic Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="organic"
+              checked={organic}
+              onChange={() => setOrganic(!organic)}
+              className="h-4 w-4 text-green-800"
+            />
+            <label htmlFor="organic" className="text-sm text-gray-700">Organic Only</label>
+          </div>
+
+          {/* Local Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="local"
+              checked={local}
+              onChange={() => setLocal(!local)}
+              className="h-4 w-4 text-green-800"
+            />
+            <label htmlFor="local" className="text-sm text-gray-700">Local Only</label>
+          </div>
+
+          {/* Pesticide Free Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="pesticideFree"
+              checked={pesticideFree}
+              onChange={() => setPesticideFree(!pesticideFree)}
+              className="h-4 w-4 text-green-800"
+            />
+            <label htmlFor="pesticideFree" className="text-sm text-gray-700">Pesticide Free</label>
+          </div>
+
+          {/* Search Button */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleSearch()}
@@ -167,24 +182,24 @@ export default function Home() {
           </div>
 
           {/* Search Results */}
-        <div className="mt-6 w-full">
-          {searchResults.length > 0 ? (
-            <div className="space-y-4">
-              {searchResults.map((product) => (
-                <div key={product.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold">{product.name}</h3>
-                  <p className="text-sm text-gray-500">Classification: {product.classification}</p>
-                  <p className="text-sm text-gray-500">Price: ${product.price}</p>
-                  <p className="text-sm text-gray-500">Inventory: {product.inventory}</p>
-                  <p className="text-sm text-gray-500">Supplier: {product.supplier}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p>No results found.</p>
-          )}
-        </div>
-        </div>
+          <div className="mt-6 w-full">
+            {searchResults.length > 0 ? (
+              <div className="space-y-4">
+                {searchResults.map((product) => (
+                  <div key={product.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+                    <h3 className="text-xl font-semibold text-green-800">{product.name}</h3>
+                    <p className="text-sm text-gray-500">Classification: {product.classification}</p>
+                    <p className="text-sm text-gray-500">Price: ${product.price}</p>
+                    <p className="text-sm text-gray-500">Inventory: {product.inventory}</p>
+                    <p className="text-sm text-gray-500">Supplier: {product.supplier}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No results found.</p>
+            )}
+          </div>
+          </div>
 
         <p className="text-lg text-gray-600 mt-4">Welcome to EcoEnhance by EcoFresh Mart! 🌿</p>
       </main>
