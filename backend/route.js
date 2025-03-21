@@ -27,6 +27,9 @@ function routes(req, res) {
     if (URL.startsWith('/getinventory') && method === 'POST') {
         return actions.getInventory(req, res);
     }
+    if (URL.startsWith('/getsupplier') && method === 'POST') {
+        return actions.getSupplier(req, res);
+    }
     
     
 

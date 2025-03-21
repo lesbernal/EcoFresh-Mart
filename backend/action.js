@@ -188,6 +188,66 @@ const getInventory = async (req, res) => {
     });
 };
 
+const getSupplier = async (req, res) => {
+    let body = "";
+
+    req.on("data", (chunk) => {
+        body += chunk.toString();
+    });
+
+    req.on('end', async () => {
+        try {
+            // Parse the request body
+            const parsedBody = JSON.parse(body);
+            const { suppliers } = parsedBody;
+
+            // Validate the amount
+            if (!suppliers) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ success: false, message: 'Invalid supplier name. Please provide a valid supplier name.' }));
+            }
+
+            // Log the amount to ensure correct data is received
+            console.log('Received supplier name:', suppliers);
+
+            // Run the query to fetch produce information
+            const [result] = await pool.promise().query(`
+                SELECT 
+                    produce_id, 
+                    produce.name AS produce_name, 
+                    price, 
+                    inventory, 
+                    supplier.name AS supplier_name
+                FROM 
+                    produce
+                INNER JOIN 
+                    supplier ON produce.supplier_id = supplier.supplier_id
+                WHERE 
+                    supplier.name = ?;`, 
+                [suppliers]
+            );
+
+            // Check if any produce was found
+            if (result.length === 0) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ success: false, message: 'No produce found with the specified supplier name.' }));
+            }
+
+            // Respond with the fetched data
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, result }));
+
+        } catch (err) {
+            // Log the error message for debugging
+            console.error('Error fetching produce:', err);
+
+            // Respond with the error message
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, message: 'Failed to fetch produce', error: err.message }));
+        }
+    });
+};
+
 module.exports = {
     getAllProduce,
     getClassification,
@@ -195,5 +255,6 @@ module.exports = {
     getAllLocal,
     getAllPesticideFree,
     getAllPrice,
-    getInventory
+    getInventory,
+    getSupplier
 };
