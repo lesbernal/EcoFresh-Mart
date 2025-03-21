@@ -18,17 +18,31 @@ export default function Home() {
   const [supplier, setSupplier] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [searchResults, setSearchResults] = useState([]);
+
+  const mockProducts = [
+    { id: 1, name: "Apple", classification: "fruits", organic: true, price: 1.5, inventory: 100, supplier: "supplier1" },
+    { id: 2, name: "Banana", classification: "fruits", organic: false, price: 0.75, inventory: 120, supplier: "supplier2" },
+    { id: 3, name: "Carrot", classification: "vegetables", organic: true, price: .80, inventory: 200, supplier: "supplier1" },
+    { id: 4, name: "Tomato", classification: "vegetables", organic: false, price: 1.25, inventory: 150, supplier: "supplier3" },
+  ]
+
   const handleSearch = () => {
 
-    console.log({
-      classification,
-      organic,
-      local,
-      pesticideFree,
-      inventoryAmount,
-      supplier,
-      searchQuery,
+    const filteredResults = mockProducts.filter(product => {
+      return (
+        (classification ? product.classification === classification : true) &&
+        (organic ? product.organic === true : true) &&
+        (local ? product.local === true : true) &&
+        (pesticideFree ? product.pesticideFree === true : true) &&
+        (inventoryAmount ? product.inventory >= inventoryAmount : true) &&
+        (supplier ? product.supplier === supplier : true) &&
+        (searchQuery ? product.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+      );
     });
+
+    // Set the filtered search results to state
+    setSearchResults(filteredResults);
   };
 
   return (
@@ -151,6 +165,25 @@ export default function Home() {
               Search
             </button>
           </div>
+
+          {/* Search Results */}
+        <div className="mt-6 w-full">
+          {searchResults.length > 0 ? (
+            <div className="space-y-4">
+              {searchResults.map((product) => (
+                <div key={product.id} className="p-4 border border-gray-300 rounded-lg shadow-sm">
+                  <h3 className="text-xl font-semibold">{product.name}</h3>
+                  <p className="text-sm text-gray-500">Classification: {product.classification}</p>
+                  <p className="text-sm text-gray-500">Price: ${product.price}</p>
+                  <p className="text-sm text-gray-500">Inventory: {product.inventory}</p>
+                  <p className="text-sm text-gray-500">Supplier: {product.supplier}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No results found.</p>
+          )}
+        </div>
         </div>
 
         <p className="text-lg text-gray-600 mt-4">Welcome to EcoEnhance by EcoFresh Mart! 🌿</p>
