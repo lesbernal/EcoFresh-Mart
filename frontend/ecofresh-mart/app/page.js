@@ -39,6 +39,7 @@ export default function Home() {
         (inventoryAmount ? product.inventory >= inventoryAmount : true) &&
         (supplier ? product.supplier === supplier : true) &&
         (searchQuery ? product.name.toLowerCase().includes(searchQuery.toLowerCase()) : true)
+        (maxPrice ? product.price <= maxPrice : true)
       );
     });
 
@@ -56,17 +57,7 @@ export default function Home() {
       </header>
 
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        
-        {/* Search Box */}
-        <div className="w-full flex gap-4">
-          <input 
-            type="text"
-            placeholder="Search for products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-800 focus:border-green-700"
-          />
-        </div> 
+      <p className="text-md text-gray-600 mt-4">Welcome to EcoEnhance by EcoFresh Mart! 🌿</p>
 
         {/* Search Filters */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
@@ -201,7 +192,7 @@ export default function Home() {
           </div>
           </div>
 
-        <p className="text-lg text-gray-600 mt-4">Welcome to EcoEnhance by EcoFresh Mart! 🌿</p>
+        <p className="text-lg text-gray-600 mt-4">EcoEnhance by EcoFresh Mart🌿</p>
       </main>
 
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
