@@ -12,7 +12,8 @@ const map_route = {
     '/allproduce',
     '/getorganic',
     '/getlocal',
-    '/getpesticidefree'
+    '/getpesticidefree',
+    '/getprice'
     ],
     'POST': ['/getclassification'],
     'PUT': [],

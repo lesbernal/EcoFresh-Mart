@@ -21,6 +21,9 @@ function routes(req, res) {
     if (URL.startsWith('/getpesticidefree') && method === 'GET') {
         return actions.getAllPesticideFree(req, res);
     }
+    if (URL.startsWith('/getprice') && method === 'GET') {
+        return actions.getAllPrice(req, res);
+    }
     
     
 
