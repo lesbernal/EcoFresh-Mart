@@ -15,7 +15,9 @@ const map_route = {
     '/getpesticidefree',
     '/getprice'
     ],
-    'POST': ['/getclassification'],
+    'POST': [
+    '/getclassification',
+    '/getinventory'],
     'PUT': [],
     'DELETE': [],
 };

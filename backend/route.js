@@ -24,6 +24,9 @@ function routes(req, res) {
     if (URL.startsWith('/getprice') && method === 'GET') {
         return actions.getAllPrice(req, res);
     }
+    if (URL.startsWith('/getinventory') && method === 'POST') {
+        return actions.getInventory(req, res);
+    }
     
     
 
