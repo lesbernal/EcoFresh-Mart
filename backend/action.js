@@ -248,6 +248,97 @@ const getSupplier = async (req, res) => {
     });
 };
 
+const getFilteredProduce = async (req, res) => {
+    let body = "";
+
+    // Collect data from the request body
+    req.on("data", (chunk) => {
+        body += chunk.toString();
+    });
+
+    req.on('end', async () => {
+        try {
+            // Parse the request body into JSON
+            const parsedBody = JSON.parse(body);
+
+            // Destructure parameters from the body
+            const { classification, isOrganic, isLocal, isPesticideFree, priceLessThan, amount, supplier} = parsedBody;
+
+            // Initialize the base query and parameters array
+            let query = `
+                SELECT produce_id, produce.name AS produce_name, price, inventory, supplier.name AS supplier_name
+                FROM produce
+                INNER JOIN supplier ON produce.supplier_id = supplier.supplier_id
+                WHERE 1=1`; // 1=1 ensures that we can append additional conditions dynamically
+
+            let queryParams = [];
+
+            // Dynamically add conditions based on the presence of each filter
+            if (classification) {
+                query += ` AND produce.classification = ?`;
+                queryParams.push(classification);
+            }
+
+            if (isOrganic !== undefined) {
+                query += ` AND produce.isOrganic = ?`;
+                queryParams.push(isOrganic);
+            }
+
+            if (isLocal !== undefined) {
+                query += ` AND produce.isLocal = ?`;
+                queryParams.push(isLocal);
+            }
+
+            if (isPesticideFree !== undefined) {
+                query += ` AND produce.Pesticide_Free = ?`;
+                queryParams.push(isPesticideFree);
+            }
+
+            if (priceLessThan !== undefined) {
+                if (typeof priceLessThan !== 'number' || priceLessThan < 0) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    return res.end(JSON.stringify({ success: false, message: 'Invalid priceLessThan value. Please provide a valid number.' }));
+                }
+                query += ` AND produce.price < ?`;
+                queryParams.push(priceLessThan);
+            }
+
+            if (amount !== undefined) {
+                if (typeof amount !== 'number' || amount < 0) {
+                    res.writeHead(400, { 'Content-Type': 'application/json' });
+                    return res.end(JSON.stringify({ success: false, message: 'Invalid amount value. Please provide a valid number.' }));
+                }
+                query += ` AND produce.inventory >= ?`;
+                queryParams.push(amount);
+            }
+
+            if (supplier !== undefined) {
+                query += ` AND supplier.name = ?`;
+                queryParams.push(supplier);
+            }
+
+            // Execute the query with the dynamically built parameters
+            const [produces] = await pool.promise().query(query, queryParams);
+
+            // Check if any produce is found
+            if (produces.length === 0) {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ success: false, message: 'No produce found with the specified filters.' }));
+            }
+
+            // Send the response
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, produces }));
+        } catch (err) {
+            // Log and respond with an error if something goes wrong
+            console.error('Error fetching produce with filters:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, message: 'Failed to fetch produce', error: err.message }));
+        }
+    });
+};
+
+
 module.exports = {
     getAllProduce,
     getClassification,
@@ -256,5 +347,6 @@ module.exports = {
     getAllPesticideFree,
     getAllPrice,
     getInventory,
-    getSupplier
+    getSupplier,
+    getFilteredProduce
 };

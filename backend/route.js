@@ -30,7 +30,9 @@ function routes(req, res) {
     if (URL.startsWith('/getsupplier') && method === 'POST') {
         return actions.getSupplier(req, res);
     }
-    
+    if (URL.startsWith('/getfiltered') && method === 'POST') {
+        return actions.getFilteredProduce(req, res);
+    }
     
 
     res.writeHead(404, { "Content-Type": "application/json" });

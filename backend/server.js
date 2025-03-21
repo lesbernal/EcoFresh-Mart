@@ -18,7 +18,8 @@ const map_route = {
     'POST': [
     '/getclassification',
     '/getinventory',
-    '/getsupplier'],
+    '/getsupplier',
+    '/getfiltered'],
     'PUT': [],
     'DELETE': [],
 };
