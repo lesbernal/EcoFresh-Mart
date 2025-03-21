@@ -7,7 +7,7 @@ const getAllProduce = async (req, res) => {
         const [produces] = await pool.promise().query(`
             SELECT produce_id, produce.name AS produce_name, price, inventory, supplier.name AS supplier_name
             FROM supplier, produce
-            WHERE produce.supplier_id = produce.supplier_id`);
+            WHERE produce.supplier_id = supplier.supplier_id`);
         
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, produces}));  // Ensure response is sent
@@ -18,29 +18,55 @@ const getAllProduce = async (req, res) => {
     }
 };
 
+const getClassification = async (req, res) => {
+    let body = "";
 
+    req.on("data", (chunk) => {
+        body += chunk.toString();
+    });
 
+    req.on('end', async () => {
+        try {
+            // Parse the request body
+            const parsedBody = JSON.parse(body);
+            const { classification  } = parsedBody;
 
+            // Check if produceType is provided
+            if (!classification ) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ success: false, message: 'Please choose Fruit or Vegetable' }));
+            }
 
+            // Log the produceType to ensure correct data is received
+            console.log('Received produceType:', classification );
 
+            // Run the query to fetch produce information
+            const [produces] = await pool.promise().query(`
+                SELECT produce_id, produce.name AS produce_name, price, inventory, supplier.name AS supplier_name
+                FROM produce, supplier
+                WHERE produce.supplier_id = supplier.supplier_id AND produce.classification = ?;`, 
+                [classification ]
+            );
 
-// Get all Produce
-// Get all Supplier
+            // Respond with the fetched data
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, produces }));
 
-// Get only Fruits
-// Get only Vegetables
+        } catch (err) {
+            // Log the error message for debugging
+            console.error('Error fetching produce:', err);
 
-// Get by lowest to highest price
+            // Respond with the error message
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, message: 'Failed to fetch produce', error: err.message }));
+        }
+    });
+};
 
-// Get by organic = true
-// get by pesticide = true
-// get by local = true
-// get by inventory
-
-// get by supplier
 
 
 
 module.exports = {
     getAllProduce,
+    getClassification,
 };

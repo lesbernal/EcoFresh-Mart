@@ -9,6 +9,9 @@ function routes(req, res) {
     if (URL.startsWith('/allproduce') && method === 'GET') {
         return actions.getAllProduce(req, res);
     }
+    if (URL.startsWith('/getclassification') && method === 'POST') {
+        return actions.getClassification(req, res);
+    }
     
     
 
