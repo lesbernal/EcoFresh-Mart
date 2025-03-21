@@ -12,6 +12,9 @@ function routes(req, res) {
     if (URL.startsWith('/getclassification') && method === 'POST') {
         return actions.getClassification(req, res);
     }
+    if (URL.startsWith('/getorganic') && method === 'GET') {
+        return actions.getAllOrganic(req, res);
+    }
     
     
 

@@ -63,10 +63,25 @@ const getClassification = async (req, res) => {
     });
 };
 
-
+const getAllOrganic = async (req, res) => {
+    try {
+        const [produces] = await pool.promise().query(`
+            SELECT produce_id, produce.name AS produce_name, price, inventory, supplier.name AS supplier_name
+            FROM supplier, produce
+            WHERE produce.supplier_id = supplier.supplier_id AND isOrganic = TRUE`);
+        
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, produces}));  // Ensure response is sent
+    } catch (err) {
+        console.error('Error fetching produce:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Failed to fetch produce' }));
+    }
+};
 
 
 module.exports = {
     getAllProduce,
     getClassification,
+    getAllOrganic,
 };

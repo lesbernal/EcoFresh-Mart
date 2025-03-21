@@ -8,7 +8,10 @@ const cors = require('cors');
 
 
 const map_route = {
-    'GET': ['/allproduce'],
+    'GET': [
+    '/allproduce',
+    '/getorganic'
+    ],
     'POST': ['/getclassification'],
     'PUT': [],
     'DELETE': [],
