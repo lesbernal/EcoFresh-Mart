@@ -18,6 +18,9 @@ function routes(req, res) {
     if (URL.startsWith('/getlocal') && method === 'GET') {
         return actions.getAllLocal(req, res);
     }
+    if (URL.startsWith('/getpesticidefree') && method === 'GET') {
+        return actions.getAllPesticideFree(req, res);
+    }
     
     
 
