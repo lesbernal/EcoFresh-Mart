@@ -15,6 +15,9 @@ function routes(req, res) {
     if (URL.startsWith('/getorganic') && method === 'GET') {
         return actions.getAllOrganic(req, res);
     }
+    if (URL.startsWith('/getlocal') && method === 'GET') {
+        return actions.getAllLocal(req, res);
+    }
     
     
 
