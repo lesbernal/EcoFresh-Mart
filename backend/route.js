@@ -6,6 +6,9 @@ function routes(req, res) {
     const method = req.method;
 
     console.log(`Incoming request: ${method} ${URL}`);
+    if (URL.startsWith('/allproduce') && method === 'GET') {
+        return actions.getAllProduce(req, res);
+    }
     
     
 

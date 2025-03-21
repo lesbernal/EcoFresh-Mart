@@ -8,7 +8,7 @@ const cors = require('cors');
 
 
 const map_route = {
-    'GET': [],
+    'GET': ['/allproduce'],
     'POST': [],
     'PUT': [],
     'DELETE': [],
